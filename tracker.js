@@ -1,65 +1,106 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
+const cTable = require('console.table');
 
 const connection = mysql.createConnection({
-  host: 'localhost',
+    host: 'localhost',
 
-  // Your port; if not 3306
-  port: 3306,
+    // Your port; if not 3306
+    port: 3306,
 
-  // Your username
-  user: 'root',
+    // Your username
+    user: 'root',
 
-  // Be sure to update with your own MySQL password!
-  password: 'password',
-  database: 'employee_trackerDB',
+    // Be sure to update with your own MySQL password!
+    password: 'password',
+    database: 'employee_trackerDB',
 });
 
 connection.connect((err) => {
-  if (err) throw err;
-  console.log('WORKING!!!!!!!')
-//   runSearch();
+    if (err) throw err;
+    console.log('WORKING!!!!!!!')
+    homeQuestions();
 });
 
-// const runSearch = () => {
-//   inquirer
-//     .prompt({
-//       name: 'action',
-//       type: 'rawlist',
-//       message: 'What would you like to do?',
-//       choices: [
-//         'Find songs by artist',
-//         'Find all artists who appear more than once',
-//         'Find data within a specific range',
-//         'Search for a specific song',
-//         'Find artists with a top song and top album in the same year',
-//       ],
-//     })
-//     .then((answer) => {
-//       switch (answer.action) {
-//         case 'Find songs by artist':
-//           artistSearch();
-//           break;
+const homeQuestionsclear = () => {
+    inquirer
+        .prompt({
+            name: 'action',
+            type: 'list',
+            message: 'What would you like to do?',
+            choices: [
+                'View All Employees',
+                'View All Departments',
+                'View All Job Roles',
+                'Add New Employee',
+                'Update Existing Employee',
+                'Remove Existing Employee',
+                'Add New Department',
+                'Update Existing Department',
+                'Remove Existing Department',
+                'Add New Job Role',
+                'Update Existing Job Role',
+                'Remove Existing Job Role',
+                'End Program',
+            ],
+        })
+        .then((answer) => {
+            switch (answer.action) {
+                case 'View All Employees':
+                    allEmployees();
+                    break;
 
-//         case 'Find all artists who appear more than once':
-//           multiSearch();
-//           break;
+                case 'View All Departments':
+                    allDepartments();
+                    break;
 
-//         case 'Find data within a specific range':
-//           rangeSearch();
-//           break;
+                case 'View All Roles':
+                    allRoles();
+                    break;
 
-//         case 'Search for a specific song':
-//           songSearch();
-//           break;
+                case 'Add New Employee':
+                    addEmployee();
+                    break;
 
-//         case 'Find artists with a top song and top album in the same year':
-//           songAndAlbumSearch();
-//           break;
+                case 'Update Existing Employee':
+                    updateEmployee();
+                    break;
 
-//         default:
-//           console.log(`Invalid action: ${answer.action}`);
-//           break;
-//       }
-//     });
-// };
+                case 'Remove Existing Employee':
+                    RemoveEmployee();
+                    break;
+
+                case 'Add New Department':
+                    addDepartment();
+                    break;
+
+                case 'Update Existing Department':
+                    updateDepartment();
+                    break;
+
+                case 'Remove Existing Department':
+                    RemoveDepartment();
+                    break;
+
+                case 'Add New Job Role':
+                    addJobRole();
+                    break;
+
+                case 'Update Existing Job Role':
+                    updateEmployee();
+                    break;
+
+                case 'Remove Existing Job Role':
+                    RemoveEmployee();
+                    break;
+
+                case 'End Program':
+                    connection.end();
+                    break;
+
+                default:
+                    console.log(`Invalid action: ${answer.action}`);
+                    break;
+            }
+        });
+};

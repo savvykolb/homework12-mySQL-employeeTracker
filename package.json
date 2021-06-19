@@ -6,6 +6,7 @@
   "dependencies": {
     "art": "^0.10.3",
     "ascii": "^1.0.0",
+    "console.table": "^0.10.0",
     "inquirer": "^8.1.1",
     "mysql": "^2.18.1"
   },
