@@ -22,7 +22,7 @@ connection.connect((err) => {
     homeQuestions();
 });
 
-const homeQuestionsclear = () => {
+const homeQuestions = () => {
     inquirer
         .prompt({
             name: 'action',
@@ -104,3 +104,23 @@ const homeQuestionsclear = () => {
             }
         });
 };
+
+const allEmployees = () => {
+    connection.query(
+
+        "SELECT e.id, CONCAT(e.first_name, ' ', e.last_name) AS Employee, role.title AS Title, department.name AS Department, role.salary AS Salary, CONCAT(m.first_name,' ', m.last_name) AS Manager FROM employee e LEFT JOIN employee m ON m.id = e.manager_id JOIN role ON e.role_id = role.id JOIN department ON department.id = role.department_id ORDER BY department.name,m.first_name, e.first_name ASC",
+        (err, res) => {
+            if (err) throw err;
+            console.table(res);
+            homeQuestions();
+        }
+    )
+};
+
+
+
+// -- employee id 1st column(rest of row built from that specific id), then we are combining first and last name in the second column titled as EMPLOYEE, then from table ROLE pull the TITLE and title column as TITLE, then same for department and salary then combine manager's first and last name and create column MANAGER.
+// -- Left-Join statement: Pulling manager information by saying look at ALL employee ids and ONLY match manager id where employee manager and manager id are the same => m.id = e.manager_id is needed because the manager is also still an employee and that is how it gets info. 
+// -- JOIN statement: e.role_id = role.id => Selects ALL employee role_ids and Role ids same for department.
+// -- Order By => Sorts data by department, then manager first, then by alphabetical first name.
+// -- https://www.w3schools.com/sql/sql_foreignkey.asp , https://www.w3schools.com/sql/sql_join.asp
