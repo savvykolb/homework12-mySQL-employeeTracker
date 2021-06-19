@@ -106,12 +106,14 @@ const homeQuestions = () => {
 };
 
 const allEmployees = () => {
+    console.log(` \n`);
     connection.query(
 
         "SELECT e.id, CONCAT(e.first_name, ' ', e.last_name) AS Employee, role.title AS Title, department.name AS Department, role.salary AS Salary, CONCAT(m.first_name,' ', m.last_name) AS Manager FROM employee e LEFT JOIN employee m ON m.id = e.manager_id JOIN role ON e.role_id = role.id JOIN department ON department.id = role.department_id ORDER BY department.name,m.first_name, e.first_name ASC",
         (err, res) => {
             if (err) throw err;
             console.table(res);
+            console.log(` \n`)
             homeQuestions();
         }
     )
