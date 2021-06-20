@@ -119,6 +119,18 @@ const allEmployees = () => {
     )
 };
 
+const allDepartments = () => {
+    console.log(` \n`);
+    connection.query(
+        "SELECT name AS `Departments` FROM employee_trackerDB.department",
+            (err, res) => {
+    if (err) throw err;
+    console.table(res);
+    console.log(` \n`)
+    homeQuestions();
+}
+    )
+};
 
 
 

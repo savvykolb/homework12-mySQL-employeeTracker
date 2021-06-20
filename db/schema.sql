@@ -28,7 +28,7 @@ CREATE TABLE employee (
 );
 
 
--- SELECT ALL QUERY
+-- SELECT ALL EMPLOYEE QUERY
 SELECT e.id,
 	CONCAT(e.first_name, ' ', e.last_name) AS `Employee`, 
 	role.title AS `Title`, 
@@ -43,3 +43,6 @@ JOIN department ON department.id = role.department_id
 ORDER BY department.name,
 	m.first_name, 
 	e.first_name ASC;
+
+-- SELECT ALL DEPARTMENTS QUERY
+ SELECT name AS `Departments` FROM employee_trackerDB.department;
