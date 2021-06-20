@@ -1,3 +1,4 @@
+-- Create DATABASE AND TABLES
 DROP DATABASE IF EXISTS employee_trackerDB;
 CREATE database employee_trackerDB;
 
@@ -25,3 +26,20 @@ CREATE TABLE employee (
   manager_id INT NULL,
   PRIMARY KEY (id)
 );
+
+
+-- SELECT ALL QUERY
+SELECT e.id,
+	CONCAT(e.first_name, ' ', e.last_name) AS `Employee`, 
+	role.title AS `Title`, 
+	department.name AS `Department`, 
+	role.salary AS `Salary`, 
+	CONCAT(m.first_name,' ', m.last_name) AS `Manager`
+FROM employee AS e 
+LEFT JOIN employee AS m 
+ON m.id = e.manager_id 
+JOIN role ON e.role_id = role.id 
+JOIN department ON department.id = role.department_id 
+ORDER BY department.name,
+	m.first_name, 
+	e.first_name ASC;

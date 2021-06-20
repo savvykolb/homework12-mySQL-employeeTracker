@@ -29,24 +29,24 @@ const homeQuestions = () => {
             type: 'list',
             message: 'What would you like to do?',
             choices: [
-                'View All Employees',
+                'View All Current Employees',
                 'View All Departments',
                 'View All Job Roles',
                 'Add New Employee',
                 'Update Existing Employee',
-                'Remove Existing Employee',
+                // 'Remove Existing Employee',
                 'Add New Department',
                 'Update Existing Department',
-                'Remove Existing Department',
+                // 'Remove Existing Department',
                 'Add New Job Role',
                 'Update Existing Job Role',
-                'Remove Existing Job Role',
+                // 'Remove Existing Job Role',
                 'End Program',
             ],
         })
         .then((answer) => {
             switch (answer.action) {
-                case 'View All Employees':
+                case 'View All Current Employees':
                     allEmployees();
                     break;
 
@@ -66,9 +66,9 @@ const homeQuestions = () => {
                     updateEmployee();
                     break;
 
-                case 'Remove Existing Employee':
-                    RemoveEmployee();
-                    break;
+                // case 'Remove Existing Employee':
+                //     removeEmployee();
+                //     break;
 
                 case 'Add New Department':
                     addDepartment();
@@ -78,9 +78,9 @@ const homeQuestions = () => {
                     updateDepartment();
                     break;
 
-                case 'Remove Existing Department':
-                    RemoveDepartment();
-                    break;
+                // case 'Remove Existing Department':
+                //     removeDepartment();
+                //     break;
 
                 case 'Add New Job Role':
                     addJobRole();
@@ -90,9 +90,9 @@ const homeQuestions = () => {
                     updateEmployee();
                     break;
 
-                case 'Remove Existing Job Role':
-                    RemoveEmployee();
-                    break;
+                // case 'Remove Existing Job Role':
+                //     removeEmployee();
+                //     break;
 
                 case 'End Program':
                     connection.end();
@@ -108,21 +108,24 @@ const homeQuestions = () => {
 const allEmployees = () => {
     console.log(` \n`);
     connection.query(
-
-        "SELECT e.id, CONCAT(e.first_name, ' ', e.last_name) AS Employee, role.title AS Title, department.name AS Department, role.salary AS Salary, CONCAT(m.first_name,' ', m.last_name) AS Manager FROM employee e LEFT JOIN employee m ON m.id = e.manager_id JOIN role ON e.role_id = role.id JOIN department ON department.id = role.department_id ORDER BY department.name,m.first_name, e.first_name ASC",
-        (err, res) => {
-            if (err) throw err;
-            console.table(res);
-            console.log(` \n`)
-            homeQuestions();
-        }
+        //Going to see if I can find a way to shorten this
+        "SELECT e.id,CONCAT(e.first_name, ' ', e.last_name) AS `Employee`, role.title AS `Title`, department.name AS `Department`, role.salary AS `Salary`, CONCAT(m.first_name,' ', m.last_name) AS `Manager`FROM employee AS e LEFT JOIN employee AS m ON m.id = e.manager_id JOIN role ON e.role_id = role.id JOIN department ON department.id = role.department_id ORDER BY department.name,m.first_name, e.first_name ASC",
+            (err, res) => {
+    if (err) throw err;
+    console.table(res);
+    console.log(` \n`)
+    homeQuestions();
+}
     )
 };
 
 
 
-// -- employee id 1st column(rest of row built from that specific id), then we are combining first and last name in the second column titled as EMPLOYEE, then from table ROLE pull the TITLE and title column as TITLE, then same for department and salary then combine manager's first and last name and create column MANAGER.
-// -- Left-Join statement: Pulling manager information by saying look at ALL employee ids and ONLY match manager id where employee manager and manager id are the same => m.id = e.manager_id is needed because the manager is also still an employee and that is how it gets info. 
-// -- JOIN statement: e.role_id = role.id => Selects ALL employee role_ids and Role ids same for department.
-// -- Order By => Sorts data by department, then manager first, then by alphabetical first name.
-// -- https://www.w3schools.com/sql/sql_foreignkey.asp , https://www.w3schools.com/sql/sql_join.asp
+
+
+
+
+
+// To-do:
+//  - complete rest of functions and MediaQueryListEvent
+//  - add the art to each function
