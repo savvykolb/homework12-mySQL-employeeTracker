@@ -72,19 +72,15 @@ const homeQuestions = () => {
                     updateEmployee();
                     break;
 
-                // case 'Remove Existing Employee':
-                //     removeEmployee();
-                //     break;
+                case 'Remove Existing Employee':
+                    removeEmployee();
+                    break;
 
                 case 'Add New Department':
                     addDepartment();
                     break;
 
-                case 'Update Existing Department':
-                    updateDepartment();
-                    break;
-
-                // case 'Remove Existing Department':
+                // case 'Remove Existing Department':    //if time
                 //     removeDepartment();
                 //     break;
 
@@ -92,20 +88,16 @@ const homeQuestions = () => {
                     addJobRole();
                     break;
 
-                case 'Update Existing Job Role':
-                    updateEmployee();
-                    break;
+                // case 'Update Existing Job Role':    //To update Salary extra
+                //     updateEmployee();
+                //     break;
 
-                // case 'Remove Existing Job Role':
+                // case 'Remove Existing Job Role':     //if time
                 //     removeEmployee();
                 //     break;
 
                 case 'End Program':
                     connection.end();
-                    break;
-
-                default:
-                    console.log(`Invalid action: ${answer.action}`);
                     break;
             }
         });
@@ -151,6 +143,7 @@ const allRoles = () => {
     )
 };
 
+//BUGS: You have to pick a manager, The return console log onlys tells users the id numbers, not title and m. names. 
 const addEmployee = () => {
     connection.query("SELECT * FROM role", (err, role) => {
         if (err) throw err;
@@ -159,9 +152,9 @@ const addEmployee = () => {
             if (err) throw err;
 
             inquirer
-                .prompt([                                                   //BUGS: You have to pick a manager, 
-                    {                                                               // The return console log onlys tells users 
-                        name: 'first_name',                                          // the id numbers, not title and m. names. 
+                .prompt([                                                   
+                    {                                                              
+                        name: 'first_name',                                          
                         type: 'input',
                         message: 'Enter new employees first name.'
                     },
@@ -188,7 +181,8 @@ const addEmployee = () => {
                         choices: employee.map(employee => {
                             return {
                                 name: employee.first_name + " " + employee.last_name,
-                                value: employee.id
+                                value: employee.id 
+                                // || null
                             }
                         })
                     },
@@ -197,7 +191,7 @@ const addEmployee = () => {
                         "INSERT INTO employee SET ?", answer, (err) => {
                         if (err) throw err;
                         console.log( 
-                            `\n E M P L O Y E E  A D D E D !! \n || Employee Name: ${answer.first_name + ' ' + answer.last_name}|| Job Role: ${answer.role_id} || Manager Name: ${answer.manager_id} || \n`
+                            `\n E M P L O Y E E  A D D E D !! \n \n || Employee Name: ${answer.first_name + ' ' + answer.last_name}|| Job Role: ${answer.role_id} || Manager Name: ${answer.manager_id} || \n`
                             );
                         homeQuestions();
                     });
@@ -206,8 +200,36 @@ const addEmployee = () => {
     });
 };
  
+const updateEmployee = () => {
 
+};
 
+const removeEmployee = () => {
+
+};
+
+const addDepartment = () => {
+    inquirer
+        .prompt([
+            { 
+                name: 'name',
+                type: 'input',
+                message: 'Enter new departments name.'
+            }
+        ]).then((answer) => {
+            connection.query (
+                "INSERT INTO department SET ?", answer, (err,res) => {
+                    if (err) throw err;
+                    console.log(`\n N E W  D E P A R T M E N T  A D D E D!! \n  || Department Name: ${answer.name} || \n`);
+                    homeQuestions();
+                })
+        })
+
+};
+
+const addJobRole = () => {
+
+};
 
 
 
