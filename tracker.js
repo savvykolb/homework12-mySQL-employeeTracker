@@ -2,6 +2,8 @@ const mysql = require('mysql');
 const inquirer = require('inquirer');
 const cTable = require('console.table');
 
+// var connection = mysql.createConnection({multipleStatements: true});
+
 const connection = mysql.createConnection({
     host: 'localhost',
 
@@ -114,12 +116,12 @@ const allEmployees = () => {
     connection.query(
         //Going to see if I can find a way to shorten this
         "SELECT e.id,CONCAT(e.first_name, ' ', e.last_name) AS `Employee`, role.title AS `Title`, department.name AS `Department`, role.salary AS `Salary`, CONCAT(m.first_name,' ', m.last_name) AS `Manager`FROM employee AS e LEFT JOIN employee AS m ON m.id = e.manager_id JOIN role ON e.role_id = role.id JOIN department ON department.id = role.department_id ORDER BY department.name,m.first_name, e.first_name ASC",
-            (err, res) => {
-    if (err) throw err;
-    console.table(res);
-    console.log(` \n`)
-    homeQuestions();
-}
+        (err, res) => {
+            if (err) throw err;
+            console.table(res);
+            console.log(` \n`)
+            homeQuestions();
+        }
     )
 };
 
@@ -127,12 +129,12 @@ const allDepartments = () => {
     console.log(` \n`);
     connection.query(
         "SELECT name AS `Departments` FROM employee_trackerDB.department ORDER BY name;",
-            (err, res) => {
-    if (err) throw err;
-    console.table(res);
-    console.log(` \n`)
-    homeQuestions();
-}
+        (err, res) => {
+            if (err) throw err;
+            console.table(res);
+            console.log(` \n`)
+            homeQuestions();
+        }
     )
 };
 
@@ -140,84 +142,70 @@ const allRoles = () => {
     console.log(` \n`);
     connection.query(
         "SELECT title AS `Job Role`, salary AS `Base Salary` FROM employee_trackerDB.role ORDER BY title;",
-            (err, res) => {
-    if (err) throw err;
-    console.table(res);
-    console.log(` \n`)
-    homeQuestions();
-}
+        (err, res) => {
+            if (err) throw err;
+            console.table(res);
+            console.log(` \n`)
+            homeQuestions();
+        }
     )
 };
 
-
-// What is the employees first name?
-// What is the employees last name?
-// Select the job role for new employee.
-// Select the manager of this employee.
-
 const addEmployee = () => {
-    inquirer
-        .prompt([
-            {
-                name: 'fName',
-                type: 'input',
-                message: 'Enter new employees first name.'
-            },
-            {
-                name: 'lName',
-                type: 'input',
-                message: 'Enter new employees last name.'
-            },
-            {
-                name: 'role',
-                type: 'list',
-                message: 'Select new employees job role.',
-                choices: [
-                    'Branch Manager',
-                    'Assistant to Manager',
-                    'Salesman',
-                    'Office Administrator',
-                    'Receptionist',
-                    'Head of Accounting',
-                    'Accountant',
-                    'Human Resource Manager',
-                    'Temp',
-                    'Supplier Relations',
-                    'Quality Assurnace Specialist',
-                    'Warehouse Foreman',
-                    'Warehouse Employee',
-                ],
-            },
-            {
-                name: 'manager',
-                type: 'list',
-                message: 'Select new employees manager.',
-                choices: [
-                    'Michael Scott',
-                    'Angela Martin',
-                    'Daryll Philbin',
-                    'Toby Flenderson',
-                    'No manager will oversee this employee.'
-                ],
-            },
-        ])
-        .then((answer) => {
-            const query = 
-            "INSERT INTO QUERY....." //NEED TO INSERT REAL QUERY
-            console.log(` \n`);
-                connection.query(query, [answer.fName, answer.lName, answer.role, answer.manager], (err, res) => {
-                    res.forEach(({first_name, last_name, role_id, manager_id}) => {
+    connection.query("SELECT * FROM role", (err, role) => {
+        if (err) throw err;
+
+        connection.query("SELECT * FROM employee", (err, employee) => {
+            if (err) throw err;
+
+            inquirer
+                .prompt([
+                    {
+                        name: 'first_name',
+                        type: 'input',
+                        message: 'Enter new employees first name.'
+                    },
+                    {
+                        name: 'last_name',
+                        type: 'input',
+                        message: 'Enter new employees last name.'
+                    },
+                    {
+                        name: 'role_id',
+                        type: 'list',
+                        message: 'Select new employees job role.',
+                        choices: role.map(role => {
+                            return {
+                                name: role.title,
+                                value: role.id
+                            }
+                        })
+                    },
+                    {
+                        name: 'manager_id',
+                        type: 'list',
+                        message: 'Select new employees manager.',
+                        choices: employee.map(employee => {
+                            return {
+                                name: employee.first_name + " " + employee.last_name,
+                                value: employee.id
+                            }
+                        })
+                    },
+                ]).then((answer) => {
+                    connection.query(
+                        "INSERT INTO employee SET ?", answer, (err, res) => {
+                        if (err) throw err;
                         console.log( //THIS WILL PROBABLY NEED TO CHANGE - I DONT THINK IT WILL POPULATE CORRECTLY
-                            `Employee Name: ${first_name} ${last_name}|| Job Role: ${role_id} || Manager Name: ${manager_id}`
-                        );
+                            `\n E M P L O Y E E  A D D E D !! \n || Employee Name: ${answer.first_name + ' ' + answer.last_name}|| Job Role: ${answer.role_id} || Manager Name: ${answer.manager_id} || \n`
+                            );
+                        homeQuestions();
                     });
-                    console.log(` \n`)
-                    homeQuestions();
                 });
         });
+    });
 };
-
-
+ 
 
 
 
