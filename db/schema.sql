@@ -45,4 +45,7 @@ ORDER BY department.name,
 	e.first_name ASC;
 
 -- SELECT ALL DEPARTMENTS QUERY
- SELECT name AS `Departments` FROM employee_trackerDB.department;
+ SELECT name AS `Departments` FROM employee_trackerDB.department ORDER BY name;
+
+--SELECT ALL JOB ROLES QUERY
+SELECT title AS `Job Role`, salary AS `Base Salary` FROM employee_trackerDB.role ORDER BY title;

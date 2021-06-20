@@ -18,7 +18,11 @@ const connection = mysql.createConnection({
 
 connection.connect((err) => {
     if (err) throw err;
-    console.log('WORKING!!!!!!!')
+    console.log(` \n`);
+    console.log('W E L C O M E  TO  D U N D E R  &  M I F F L I N!!')
+    console.log(` \n`);
+    console.log('Limitless Paper in a Paperless World.')
+    console.log(` \n`);
     homeQuestions();
 });
 
@@ -54,7 +58,7 @@ const homeQuestions = () => {
                     allDepartments();
                     break;
 
-                case 'View All Roles':
+                case 'View All Job Roles':
                     allRoles();
                     break;
 
@@ -122,7 +126,7 @@ const allEmployees = () => {
 const allDepartments = () => {
     console.log(` \n`);
     connection.query(
-        "SELECT name AS `Departments` FROM employee_trackerDB.department",
+        "SELECT name AS `Departments` FROM employee_trackerDB.department ORDER BY name;",
             (err, res) => {
     if (err) throw err;
     console.table(res);
@@ -130,6 +134,87 @@ const allDepartments = () => {
     homeQuestions();
 }
     )
+};
+
+const allRoles = () => {
+    console.log(` \n`);
+    connection.query(
+        "SELECT title AS `Job Role`, salary AS `Base Salary` FROM employee_trackerDB.role ORDER BY title;",
+            (err, res) => {
+    if (err) throw err;
+    console.table(res);
+    console.log(` \n`)
+    homeQuestions();
+}
+    )
+};
+
+
+// What is the employees first name?
+// What is the employees last name?
+// Select the job role for new employee.
+// Select the manager of this employee.
+
+const addEmployee = () => {
+    inquirer
+        .prompt([
+            {
+                name: 'fName',
+                type: 'input',
+                message: 'Enter new employees first name.'
+            },
+            {
+                name: 'lName',
+                type: 'input',
+                message: 'Enter new employees last name.'
+            },
+            {
+                name: 'role',
+                type: 'list',
+                message: 'Select new employees job role.',
+                choices: [
+                    'Branch Manager',
+                    'Assistant to Manager',
+                    'Salesman',
+                    'Office Administrator',
+                    'Receptionist',
+                    'Head of Accounting',
+                    'Accountant',
+                    'Human Resource Manager',
+                    'Temp',
+                    'Supplier Relations',
+                    'Quality Assurnace Specialist',
+                    'Warehouse Foreman',
+                    'Warehouse Employee',
+                ],
+            },
+            {
+                name: 'manager',
+                type: 'list',
+                message: 'Select new employees manager.',
+                choices: [
+                    'Michael Scott',
+                    'Angela Martin',
+                    'Daryll Philbin',
+                    'Toby Flenderson',
+                    'No manager will oversee this employee.'
+                ],
+            },
+        ])
+        .then((answer) => {
+            const query = 
+            "INSERT INTO QUERY....." //NEED TO INSERT REAL QUERY
+            console.log(` \n`);
+                connection.query(query, [answer.fName, answer.lName, answer.role, answer.manager], (err, res) => {
+                    res.forEach(({first_name, last_name, role_id, manager_id}) => {
+                        console.log( //THIS WILL PROBABLY NEED TO CHANGE - I DONT THINK IT WILL POPULATE CORRECTLY
+                            `Employee Name: ${first_name} ${last_name}|| Job Role: ${role_id} || Manager Name: ${manager_id}`
+                        );
+                    });
+                    console.log(` \n`)
+                    homeQuestions();
+                });
+        });
 };
 
 
