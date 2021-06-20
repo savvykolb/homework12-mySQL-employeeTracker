@@ -159,9 +159,9 @@ const addEmployee = () => {
             if (err) throw err;
 
             inquirer
-                .prompt([
-                    {
-                        name: 'first_name',
+                .prompt([                                                   //BUGS: You have to pick a manager, 
+                    {                                                               // The return console log onlys tells users 
+                        name: 'first_name',                                          // the id numbers, not title and m. names. 
                         type: 'input',
                         message: 'Enter new employees first name.'
                     },
@@ -194,9 +194,9 @@ const addEmployee = () => {
                     },
                 ]).then((answer) => {
                     connection.query(
-                        "INSERT INTO employee SET ?", answer, (err, res) => {
+                        "INSERT INTO employee SET ?", answer, (err) => {
                         if (err) throw err;
-                        console.log( //THIS WILL PROBABLY NEED TO CHANGE - I DONT THINK IT WILL POPULATE CORRECTLY
+                        console.log( 
                             `\n E M P L O Y E E  A D D E D !! \n || Employee Name: ${answer.first_name + ' ' + answer.last_name}|| Job Role: ${answer.role_id} || Manager Name: ${answer.manager_id} || \n`
                             );
                         homeQuestions();
