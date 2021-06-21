@@ -33,7 +33,7 @@ const homeQuestions = () => {
                 // 'Remove Existing Department',
                 'Add New Job Role',
                 'Update Existing Job Role Salary',
-                // 'Remove Existing Job Role',
+                'Remove Existing Job Role',
                 'End Program',
             ],
         })
@@ -79,9 +79,9 @@ const homeQuestions = () => {
                     updateJobRole();
                     break;
 
-                // case 'Remove Existing Job Role':     //if time
-                //     removeJobRole();
-                //     break;
+                case 'Remove Existing Job Role':     
+                    removeJobRole();
+                    break;
 
                 case 'End Program':
                     connection.end();
@@ -259,11 +259,11 @@ const removeEmployee = () => {
                     })
                 },
             ]).then((answer) => {
-                console.log('answer:', answer);
+                // console.log('answer:', answer);
                 let delEmployee = answer.employee_removed;
                 const query = 'DELETE FROM employee WHERE id = ?';
                 connection.query(
-                    query, delEmployee, (err, res) => {
+                    query, delEmployee, (err) => {
                         if (err) throw err;
                         // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> WHY DID THIS NOT WORK >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                         // connection.query("DELETE FROM employee WHERE id = ?"),
@@ -368,7 +368,6 @@ const updateJobRole = () => {
                 },
 
             ]).then((answer) => {
-                console.log('answer:', answer)
                 connection.query("UPDATE role SET ? WHERE ?",
                     [
                         {
@@ -388,7 +387,38 @@ const updateJobRole = () => {
     })
 };
 
+const removeJobRole = () => {
+    connection.query("SELECT * FROM role", (err, role) => {
+        if (err) throw err;
 
+        inquirer
+            .prompt([
+                {
+                    name: 'role_removed',
+                    type: 'list',
+                    message: 'Select the job role you would like to remove.',
+                    choices: role.map(role => {
+                        return {
+                            name: role.title,
+                            value: role.id
+                        }
+                    })
+                },
+            ]).then((answer) => {
+                console.log('answer:', answer);
+                let delEmployee = answer.role_removed;
+                const query = 'DELETE FROM role WHERE id = ?';
+                connection.query(
+                    query, delEmployee, (err) => {
+                        if (err) throw err;
+                        console.log(
+                            `\n J O B  R O L E  D E L E T E D !! \n \n || Job Role ID: ${answer.role_removed} || \n`
+                        );
+                        homeQuestions();
+                    });
+            });
+    });
+};
 
 
 
