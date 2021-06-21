@@ -1,30 +1,18 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
-const cTable = require('console.table');
-
-// var connection = mysql.createConnection({multipleStatements: true});
 
 const connection = mysql.createConnection({
     host: 'localhost',
-
-    // Your port; if not 3306
     port: 3306,
-
-    // Your username
     user: 'root',
-
-    // Be sure to update with your own MySQL password!
     password: 'password',
     database: 'employee_trackerDB',
 });
 
 connection.connect((err) => {
     if (err) throw err;
-    console.log(` \n`);
-    console.log('W E L C O M E  TO  D U N D E R  &  M I F F L I N!!')
-    console.log(` \n`);
-    console.log('Limitless Paper in a Paperless World.')
-    console.log(` \n`);
+    console.log('\n W E L C O M E  TO  D U N D E R  &  M I F F L I N!! \n');
+    console.log('Limitless Paper in a Paperless World. \n');
     homeQuestions();
 });
 
@@ -201,13 +189,14 @@ const addEmployee = () => {
 
 //BUGS: employee and job role are id numbers instead of names in console log
 const updateEmployee = () => {
-        connection.query("SELECT * FROM employee", (err, employee) => {
-            if(err) throw err;
-    
-            connection.query("SELECT * FROM role", (err, role) => {
-                if(err) throw err;
-    
-                inquirer.prompt([
+    connection.query("SELECT * FROM employee", (err, employee) => {
+        if (err) throw err;
+
+        connection.query("SELECT * FROM role", (err, role) => {
+            if (err) throw err;
+
+            inquirer
+                .prompt([
                     {
                         name: "employee_id",
                         type: "list",
@@ -231,29 +220,64 @@ const updateEmployee = () => {
                         })
                     }
                 ]).then((answer) => {
-                    connection.query("UPDATE employee SET ? WHERE ?", 
-                    [
-                        {
-                            role_id: answer.role_id
-                        },
-                        {
-                            id: answer.employee_id
-                        }
-                    ],
-                     (err) => {
-                         if (err) throw err;
-                        console.log(
-                            `\n E M P L O Y E E  U D A T E D !! \n \n || Employee ID: ${answer.employee_id}|| Job Role ID: ${answer.role_id} \n`
-                        );
-                        homeQuestions();
-                    });
+                    connection.query("UPDATE employee SET ? WHERE ?",
+                        [
+                            {
+                                role_id: answer.role_id
+                            },
+                            {
+                                id: answer.employee_id
+                            }
+                        ],(err) => {
+                            if (err) throw err;
+                            console.log(
+                                `\n E M P L O Y E E  U D A T E D !! \n \n || Employee ID: ${answer.employee_id}|| Job Role ID: ${answer.role_id} \n`
+                            );
+                            homeQuestions();
+                        });
                 });
-            })
         })
-    };
+    })
+};
 
 const removeEmployee = () => {
+    connection.query("SELECT * FROM employee", (err, employee) => {
+        if (err) throw err;
 
+        inquirer
+            .prompt([
+                {
+                    name: 'employee_removed',
+                    type: 'list',
+                    message: 'Select the employee you would like to remove.',
+                    choices: employee.map(employee => {
+                        return {
+                            name: `${employee.first_name} ${employee.last_name}`,
+                            value: employee.id
+                        }
+                    })
+                },
+            ]).then((answer) => {
+                console.log('answer:', answer);
+                let delEmployee = answer.employee_removed;
+                const query = 'DELETE FROM employee WHERE id = ?';
+                connection.query(
+                  query, delEmployee, (err, res) => {
+                    if (err) throw err;
+                    // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> WHY DID THIS NOT WORK >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                    // connection.query("DELETE FROM employee WHERE id = ?"),
+                    //     {
+                    //        id: answer.employee_removed
+                    //     },
+                    //     (err) => {
+                    //     if (err) throw err;
+                    console.log(
+                        `\n E M P L O Y E E  D E L E T E D !! \n \n || Employee ID: ${answer.employee_removed} || \n`
+                        );
+                        homeQuestions();
+                });
+            });
+    });
 };
 
 const addDepartment = () => {
