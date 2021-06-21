@@ -10,6 +10,12 @@ const connection = mysql.createConnection({
     database: 'employee_trackerDB',
 });
 
+//TO DO STILL:
+    //READ ME
+    //VIDEO
+    //SUBMIT
+    //WORK THROUGH BUGS IF TIME
+
 connection.connect((err) => {
     if (err) throw err;
     console.log('\n W E L C O M E  TO  D U N D E R  &  M I F F L I N!! \n');
