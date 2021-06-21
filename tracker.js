@@ -30,7 +30,7 @@ const homeQuestions = () => {
                 'Update Existing Employee Role',
                 'Remove Existing Employee',
                 'Add New Department',
-                // 'Remove Existing Department',
+                'Remove Existing Department',
                 'Add New Job Role',
                 'Update Existing Job Role Salary',
                 'Remove Existing Job Role',
@@ -67,9 +67,9 @@ const homeQuestions = () => {
                     addDepartment();
                     break;
 
-                // case 'Remove Existing Department':    //if time
-                //     removeDepartment();
-                //     break;
+                case 'Remove Existing Department':    
+                    removeDepartment();
+                    break;
 
                 case 'Add New Job Role':
                     addJobRole();
@@ -300,6 +300,38 @@ const addDepartment = () => {
 
 };
 
+const removeDepartment = () => {
+    connection.query("SELECT * FROM department", (err, department) => {
+        if (err) throw err;
+
+        inquirer
+            .prompt([
+                {
+                    name: 'department_removed',
+                    type: 'list',
+                    message: 'Select the Department you would like to remove.',
+                    choices: department.map(department => {
+                        return {
+                            name: department.name,
+                            value: department.id
+                        }
+                    })
+                },
+            ]).then((answer) => {
+                let delEmployee = answer.department_removed;
+                const query = 'DELETE FROM department WHERE id = ?';
+                connection.query(
+                    query, delEmployee, (err) => {
+                        if (err) throw err;
+                        console.log(
+                            `\n D E P A R T M E N T  D E L E T E D !! \n \n || Job Role ID: ${answer.department_removed} || \n`
+                        );
+                        homeQuestions();
+                    });
+            });
+    });
+};
+
 //BUG: department shows up as id -> not name
 const addJobRole = () => {
     connection.query("SELECT * FROM department", (err, department) => {
@@ -405,7 +437,6 @@ const removeJobRole = () => {
                     })
                 },
             ]).then((answer) => {
-                console.log('answer:', answer);
                 let delEmployee = answer.role_removed;
                 const query = 'DELETE FROM role WHERE id = ?';
                 connection.query(
