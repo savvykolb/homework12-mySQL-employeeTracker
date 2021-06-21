@@ -40,12 +40,11 @@ const homeQuestions = () => {
                 'View All Job Roles',
                 'Add New Employee',
                 'Update Existing Employee',
-                // 'Remove Existing Employee',
+                'Remove Existing Employee',
                 'Add New Department',
-                'Update Existing Department',
                 // 'Remove Existing Department',
                 'Add New Job Role',
-                'Update Existing Job Role',
+                // 'Update Existing Job Role',
                 // 'Remove Existing Job Role',
                 'End Program',
             ],
@@ -152,9 +151,9 @@ const addEmployee = () => {
             if (err) throw err;
 
             inquirer
-                .prompt([                                                   
-                    {                                                              
-                        name: 'first_name',                                          
+                .prompt([
+                    {
+                        name: 'first_name',
                         type: 'input',
                         message: 'Enter new employees first name.'
                     },
@@ -181,7 +180,7 @@ const addEmployee = () => {
                         choices: employee.map(employee => {
                             return {
                                 name: employee.first_name + " " + employee.last_name,
-                                value: employee.id 
+                                value: employee.id
                                 // || null
                             }
                         })
@@ -189,17 +188,17 @@ const addEmployee = () => {
                 ]).then((answer) => {
                     connection.query(
                         "INSERT INTO employee SET ?", answer, (err) => {
-                        if (err) throw err;
-                        console.log( 
-                            `\n E M P L O Y E E  A D D E D !! \n \n || Employee Name: ${answer.first_name + ' ' + answer.last_name}|| Job Role: ${answer.role_id} || Manager Name: ${answer.manager_id} || \n`
+                            if (err) throw err;
+                            console.log(
+                                `\n E M P L O Y E E  A D D E D !! \n \n || Employee Name: ${answer.first_name + ' ' + answer.last_name}|| Job Role: ${answer.role_id} || Manager Name: ${answer.manager_id} || \n`
                             );
-                        homeQuestions();
-                    });
+                            homeQuestions();
+                        });
                 });
         });
     });
 };
- 
+
 const updateEmployee = () => {
 
 };
@@ -211,14 +210,14 @@ const removeEmployee = () => {
 const addDepartment = () => {
     inquirer
         .prompt([
-            { 
+            {
                 name: 'name',
                 type: 'input',
                 message: 'Enter new departments name.'
             }
         ]).then((answer) => {
-            connection.query (
-                "INSERT INTO department SET ?", answer, (err,res) => {
+            connection.query(
+                "INSERT INTO department SET ?", answer, (err, res) => {
                     if (err) throw err;
                     console.log(`\n N E W  D E P A R T M E N T  A D D E D!! \n  || Department Name: ${answer.name} || \n`);
                     homeQuestions();
@@ -227,9 +226,53 @@ const addDepartment = () => {
 
 };
 
+//Bug: department shows up as id -> not name
 const addJobRole = () => {
+    connection.query("SELECT * FROM department", (err, department) => {
+        if (err) throw err;
 
+        inquirer
+            .prompt([
+                {
+                    name: 'title',
+                    type: 'input',
+                    message: 'Enter new job role title.'
+                },
+                {
+                    name: 'salary',
+                    type: 'input',
+                    message: 'Enter the base annual salary for new job role.',
+                    validate: (value) => {
+                        return !isNaN(value) ? true : "Please provide a number value.";
+                    }
+                },
+                {
+                    name: 'name',
+                    type: 'list',
+                    message: 'Select the department new job role will be assigned to.',
+                    choices: department.map(department => {
+                        return {
+                            name: department.name,
+                            value: department.id
+                        }
+                    })
+                },
+            ]).then((answer) => {
+                connection.query(
+                    "INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)", [answer.title, answer.salary, answer.department_id], (err) => {
+                        if (err) throw err;
+                        console.log(
+                            `\n N E W  J O B  R O L E  A D D E D !! \n \n || Job Role: ${answer.title}|| Salary: ${answer.salary} || Department: ${answer.name} || \n`
+                        );
+                        homeQuestions();
+                    });
+            });
+    });
 };
+
+
+
+
 
 
 
