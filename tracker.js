@@ -1,5 +1,6 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
+const cTable = require('console.table');
 
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -451,8 +452,3 @@ const removeJobRole = () => {
     });
 };
 
-
-
-// To-do:
-//  - complete rest of functions and MediaQueryListEvent
-//  - add the art to each function
