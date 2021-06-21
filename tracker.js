@@ -32,7 +32,7 @@ const homeQuestions = () => {
                 'Add New Department',
                 // 'Remove Existing Department',
                 'Add New Job Role',
-                // 'Update Existing Job Role',
+                'Update Existing Job Role Salary',
                 // 'Remove Existing Job Role',
                 'End Program',
             ],
@@ -75,12 +75,12 @@ const homeQuestions = () => {
                     addJobRole();
                     break;
 
-                // case 'Update Existing Job Role':    //To update Salary extra
-                //     updateEmployee();
-                //     break;
+                case 'Update Existing Job Role Salary':    //To update Salary extra
+                    updateJobRole();
+                    break;
 
                 // case 'Remove Existing Job Role':     //if time
-                //     removeEmployee();
+                //     removeJobRole();
                 //     break;
 
                 case 'End Program':
@@ -228,7 +228,7 @@ const updateEmployee = () => {
                             {
                                 id: answer.employee_id
                             }
-                        ],(err) => {
+                        ], (err) => {
                             if (err) throw err;
                             console.log(
                                 `\n E M P L O Y E E  U D A T E D !! \n \n || Employee ID: ${answer.employee_id}|| Job Role ID: ${answer.role_id} \n`
@@ -240,6 +240,7 @@ const updateEmployee = () => {
     })
 };
 
+// NOT A BUG BUT QUESTION!!!
 const removeEmployee = () => {
     connection.query("SELECT * FROM employee", (err, employee) => {
         if (err) throw err;
@@ -262,20 +263,20 @@ const removeEmployee = () => {
                 let delEmployee = answer.employee_removed;
                 const query = 'DELETE FROM employee WHERE id = ?';
                 connection.query(
-                  query, delEmployee, (err, res) => {
-                    if (err) throw err;
-                    // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> WHY DID THIS NOT WORK >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                    // connection.query("DELETE FROM employee WHERE id = ?"),
-                    //     {
-                    //        id: answer.employee_removed
-                    //     },
-                    //     (err) => {
-                    //     if (err) throw err;
-                    console.log(
-                        `\n E M P L O Y E E  D E L E T E D !! \n \n || Employee ID: ${answer.employee_removed} || \n`
+                    query, delEmployee, (err, res) => {
+                        if (err) throw err;
+                        // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> WHY DID THIS NOT WORK >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                        // connection.query("DELETE FROM employee WHERE id = ?"),
+                        //     {
+                        //        id: answer.employee_removed
+                        //     },
+                        //     (err) => {
+                        //     if (err) throw err;
+                        console.log(
+                            `\n E M P L O Y E E  D E L E T E D !! \n \n || Employee ID: ${answer.employee_removed} || \n`
                         );
                         homeQuestions();
-                });
+                    });
             });
     });
 };
@@ -343,7 +344,49 @@ const addJobRole = () => {
     });
 };
 
+const updateJobRole = () => {
+    connection.query("SELECT * FROM role", (err, role) => {
+        if (err) throw err;
 
+        inquirer
+            .prompt([
+                {
+                    name: "job_role",
+                    type: "list",
+                    message: "Select the job role you would like to update.",
+                    choices: role.map(role => {
+                        return {
+                            name: role.title,
+                            value: role.id
+                        }
+                    })
+                },
+                {
+                    name: "update_salary",
+                    type: "input",
+                    message: "Enter in the new annual base salary for the job role selected.",
+                },
+
+            ]).then((answer) => {
+                console.log('answer:', answer)
+                connection.query("UPDATE role SET ? WHERE ?",
+                    [
+                        {
+                            salary: answer.update_salary
+                        },
+                        {
+                            id: answer.job_role
+                        }
+                    ], (err) => {
+                        if (err) throw err;
+                        console.log(
+                            `\n S A L A R Y  U D A T E D !! \n \n || Job Role ID: ${answer.job_role} || New Salary: ${answer.update_salary}|| \n`
+                        );
+                        homeQuestions();
+                    });
+            });
+    })
+};
 
 
 
