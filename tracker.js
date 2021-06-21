@@ -39,7 +39,7 @@ const homeQuestions = () => {
                 'View All Departments',
                 'View All Job Roles',
                 'Add New Employee',
-                'Update Existing Employee',
+                'Update Existing Employee Role',
                 'Remove Existing Employee',
                 'Add New Department',
                 // 'Remove Existing Department',
@@ -67,7 +67,7 @@ const homeQuestions = () => {
                     addEmployee();
                     break;
 
-                case 'Update Existing Employee':
+                case 'Update Existing Employee Role':
                     updateEmployee();
                     break;
 
@@ -199,9 +199,58 @@ const addEmployee = () => {
     });
 };
 
+//BUGS: employee and job role are id numbers instead of names in console log
 const updateEmployee = () => {
-
-};
+        connection.query("SELECT * FROM employee", (err, employee) => {
+            if(err) throw err;
+    
+            connection.query("SELECT * FROM role", (err, role) => {
+                if(err) throw err;
+    
+                inquirer.prompt([
+                    {
+                        name: "employee_id",
+                        type: "list",
+                        message: "Select the existing employee you would like to update.",
+                        choices: employee.map(employee => {
+                            return {
+                                name: `${employee.first_name} ${employee.last_name}`,
+                                value: employee.id
+                            }
+                        })
+                    },
+                    {
+                        name: "role_id",
+                        type: "list",
+                        message: "Select the new job role the chosen employee.",
+                        choices: role.map(role => {
+                            return {
+                                name: role.title,
+                                value: role.id
+                            }
+                        })
+                    }
+                ]).then((answer) => {
+                    connection.query("UPDATE employee SET ? WHERE ?", 
+                    [
+                        {
+                            role_id: answer.role_id
+                        },
+                        {
+                            id: answer.employee_id
+                        }
+                    ],
+                     (err) => {
+                         if (err) throw err;
+                        console.log(
+                            `\n E M P L O Y E E  U D A T E D !! \n \n || Employee ID: ${answer.employee_id}|| Job Role ID: ${answer.role_id} \n`
+                        );
+                        homeQuestions();
+                    });
+                });
+            })
+        })
+    };
 
 const removeEmployee = () => {
 
@@ -226,7 +275,7 @@ const addDepartment = () => {
 
 };
 
-//Bug: department shows up as id -> not name
+//BUG: department shows up as id -> not name
 const addJobRole = () => {
     connection.query("SELECT * FROM department", (err, department) => {
         if (err) throw err;
