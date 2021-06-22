@@ -10,12 +10,6 @@ const connection = mysql.createConnection({
     database: 'employee_trackerDB',
 });
 
-//TO DO STILL:
-    //READ ME
-    //VIDEO
-    //SUBMIT
-    //WORK THROUGH BUGS IF TIME
-
 connection.connect((err) => {
     if (err) throw err;
     console.log('\n W E L C O M E  TO  D U N D E R  &  M I F F L I N!! \n');
@@ -82,7 +76,7 @@ const homeQuestions = () => {
                     addJobRole();
                     break;
 
-                case 'Update Existing Job Role Salary':    //To update Salary extra
+                case 'Update Existing Job Role Salary':    //To update Salary => extra
                     updateJobRole();
                     break;
 
@@ -137,7 +131,6 @@ const allRoles = () => {
     )
 };
 
-//BUGS: You have to pick a manager, The return console log onlys tells users the id numbers, not title and m. names. 
 const addEmployee = () => {
     connection.query("SELECT * FROM role", (err, role) => {
         if (err) throw err;
@@ -185,7 +178,7 @@ const addEmployee = () => {
                         "INSERT INTO employee SET ?", answer, (err) => {
                             if (err) throw err;
                             console.log(
-                                `\n E M P L O Y E E  A D D E D !! \n \n || Employee Name: ${answer.first_name + ' ' + answer.last_name}|| Job Role: ${answer.role_id} || Manager Name: ${answer.manager_id} || \n`
+                                `\n E M P L O Y E E  A D D E D !! \n \n || Employee Name: ${answer.first_name + ' ' + answer.last_name}|| Job Role ID: ${answer.role_id} || Manager ID: ${answer.manager_id} || \n`
                             );
                             homeQuestions();
                         });
@@ -194,7 +187,6 @@ const addEmployee = () => {
     });
 };
 
-//BUGS: employee and job role are id numbers instead of names in console log
 const updateEmployee = () => {
     connection.query("SELECT * FROM employee", (err, employee) => {
         if (err) throw err;
@@ -247,7 +239,6 @@ const updateEmployee = () => {
     })
 };
 
-// NOT A BUG BUT QUESTION!!!
 const removeEmployee = () => {
     connection.query("SELECT * FROM employee", (err, employee) => {
         if (err) throw err;
@@ -266,19 +257,11 @@ const removeEmployee = () => {
                     })
                 },
             ]).then((answer) => {
-                // console.log('answer:', answer);
                 let delEmployee = answer.employee_removed;
                 const query = 'DELETE FROM employee WHERE id = ?';
                 connection.query(
                     query, delEmployee, (err) => {
                         if (err) throw err;
-                        // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> WHY DID THIS NOT WORK >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                        // connection.query("DELETE FROM employee WHERE id = ?"),
-                        //     {
-                        //        id: answer.employee_removed
-                        //     },
-                        //     (err) => {
-                        //     if (err) throw err;
                         console.log(
                             `\n E M P L O Y E E  D E L E T E D !! \n \n || Employee ID: ${answer.employee_removed} || \n`
                         );
@@ -339,7 +322,6 @@ const removeDepartment = () => {
     });
 };
 
-//BUG: department shows up as id -> not name
 const addJobRole = () => {
     connection.query("SELECT * FROM department", (err, department) => {
         if (err) throw err;
@@ -375,7 +357,7 @@ const addJobRole = () => {
                     "INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)", [answer.title, answer.salary, answer.department_id], (err) => {
                         if (err) throw err;
                         console.log(
-                            `\n N E W  J O B  R O L E  A D D E D !! \n \n || Job Role: ${answer.title}|| Salary: ${answer.salary} || Department: ${answer.name} || \n`
+                            `\n N E W  J O B  R O L E  A D D E D !! \n \n || Job Role: ${answer.title}|| Salary: ${answer.salary} || Department ID: ${answer.name} || \n`
                         );
                         homeQuestions();
                     });
