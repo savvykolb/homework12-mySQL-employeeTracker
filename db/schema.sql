@@ -28,24 +28,3 @@ CREATE TABLE employee (
 );
 
 
--- SELECT ALL EMPLOYEE QUERY
-SELECT e.id,
-	CONCAT(e.first_name, ' ', e.last_name) AS `Employee`, 
-	role.title AS `Title`, 
-	department.name AS `Department`, 
-	role.salary AS `Salary`, 
-	CONCAT(m.first_name,' ', m.last_name) AS `Manager`
-FROM employee AS e 
-LEFT JOIN employee AS m 
-ON m.id = e.manager_id 
-JOIN role ON e.role_id = role.id 
-JOIN department ON department.id = role.department_id 
-ORDER BY department.name,
-	m.first_name, 
-	e.first_name ASC;
-
--- SELECT ALL DEPARTMENTS QUERY
- SELECT name AS `Departments` FROM employee_trackerDB.department ORDER BY name;
-
---SELECT ALL JOB ROLES QUERY
-SELECT title AS `Job Role`, salary AS `Base Salary` FROM employee_trackerDB.role ORDER BY title;

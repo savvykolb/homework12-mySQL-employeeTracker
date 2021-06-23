@@ -22,7 +22,7 @@ You will need to fork and open this application and then open your terminal. Onc
 
 Walkthrough Video:
 
-#### https://drive.google.com/file/d/1PJeYUVqz42wCoRORJ_BOk2MnkcEGQtCr/view?usp=sharing
+#### https://drive.google.com/file/d/1giWMu-EH2nnfC-CZhr8bC3v0yxuHktkt/view?usp=sharing
 
 ## Contributors
  If there is anything users feel would be beneficial to add, please feel free to contact me.
